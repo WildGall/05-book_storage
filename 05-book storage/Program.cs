@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 
@@ -112,14 +112,14 @@ namespace _05_book_storage
         {
             Console.Clear();
             Console.Write($"Введите Название книги: ");
-            string userInputNameBook = Console.ReadLine();
+            string userInputName = Console.ReadLine();
             Console.Write($"Введите Автора книги: ");
-            string userInputAutorBook = Console.ReadLine();
+            string userInputAutor = Console.ReadLine();
             Console.Write($"Введите год издания книги: ");
-            int.TryParse(Console.ReadLine(), out int yearOfReleaseBook);
+            int.TryParse(Console.ReadLine(), out int yearOfRelease);
 
-            Books.Add(new Book(userInputNameBook, userInputAutorBook, yearOfReleaseBook));
-            Console.WriteLine($"Книга {userInputNameBook} - {userInputAutorBook} - {yearOfReleaseBook} добавлена.");
+            Books.Add(new Book(userInputName, userInputAutor, yearOfRelease));
+            Console.WriteLine($"Книга {userInputName} - {userInputAutor} - {yearOfRelease} добавлена.");
             Console.ReadKey();
         }
 
@@ -128,11 +128,11 @@ namespace _05_book_storage
             Console.Clear();
             VerifyAvailabilityBooks();
             Console.Write("Введите порядковый номер книги, которую хотите удалить: ");           
-            int.TryParse(Console.ReadLine(), out int indexBook);
+            int.TryParse(Console.ReadLine(), out int index);
             
-            if (indexBook <= Books.Count)
+            if (index <= Books.Count)
             {
-                Books.RemoveAt(indexBook - 1);
+                Books.RemoveAt(index - 1);
                 Console.Write($"Книга Удалена");
             }
             else
