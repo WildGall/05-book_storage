@@ -15,7 +15,7 @@ namespace _05_book_storage
             const string CommandExitProgram = "5";
 
             bool isProgramWork = true;
-            BookStorage bookStorage = new BookStorage();
+            Storage bookStorage = new Storage();
 
             while (isProgramWork)
             {
@@ -52,60 +52,30 @@ namespace _05_book_storage
 
     class Book
     {
-        private string _name;
-        private string _author;
-        private int _yearOfRelease;
+        public string Name;
+        public string Author;
+        public int YearOfRelease;        
 
         public Book(string name, string author, int yearOfRelease)
         {
-            _name = name;
-            _author = author;
-            _yearOfRelease = yearOfRelease;
-        }        
-
-        public void SearchName(string userInput)
-        {           
-            if (userInput == _name)
-            {
-                Console.Write("Результат Поиска: ");
-                Show();
-                Console.ReadKey();
-            }            
-        }
-
-        public void SearchAuthor(string userInput)
-        {
-            if (userInput == _author)
-            {
-                Console.Write("Результат Поиска: ");
-                Show();
-                Console.ReadKey();
-            }            
-        }
-
-        public void SearchYearOfRelease(int userInput)
-        {           
-            if (userInput == _yearOfRelease)
-            {
-                Console.Write("Результат Поиска: ");
-                Show();
-                Console.ReadKey();
-            }            
-        }
+            Name = name;
+            Author = author;
+            YearOfRelease = yearOfRelease;            
+        }         
 
         public void Show()
         {
-            Console.WriteLine($"{_name} - {_author} - {_yearOfRelease}");
+            Console.WriteLine($"{Name} - {Author} - {YearOfRelease}");
         }
     }
 
-    class BookStorage
+    class Storage
     {
-        private List<Book> Books = new List<Book>();
+        private List<Book> _books = new List<Book>();
 
-        public BookStorage() 
+        public Storage() 
         {
-            DefaultBooks();
+            FillDefaultBooks();
         }
         
         public void AddBook()
@@ -116,9 +86,9 @@ namespace _05_book_storage
             Console.Write($"Введите Автора книги: ");
             string userInputAutor = Console.ReadLine();
             Console.Write($"Введите год издания книги: ");
-            int.TryParse(Console.ReadLine(), out int yearOfRelease);
+            int.TryParse(Console.ReadLine(), out int yearOfRelease);            
 
-            Books.Add(new Book(userInputName, userInputAutor, yearOfRelease));
+            _books.Add(new Book(userInputName.ToLower(), userInputAutor.ToLower(), yearOfRelease));
             Console.WriteLine($"Книга {userInputName} - {userInputAutor} - {yearOfRelease} добавлена.");
             Console.ReadKey();
         }
@@ -130,9 +100,9 @@ namespace _05_book_storage
             Console.Write("Введите порядковый номер книги, которую хотите удалить: ");           
             int.TryParse(Console.ReadLine(), out int index);
             
-            if (index <= Books.Count)
+            if (index <= _books.Count && index > 0)
             {
-                Books.RemoveAt(index - 1);
+                _books.RemoveAt(index - 1);
                 Console.Write($"Книга Удалена");
             }
             else
@@ -158,15 +128,15 @@ namespace _05_book_storage
             switch (userInput)
             {
                 case CommandName:
-                    SearchBooksByName();
+                    SearchByName();
                     break;
 
                 case CommandAutor:
-                    SearchBooksByAutor();
+                    SearchByAutor();
                     break;
 
                 case CommandYearOfRelease:
-                    SearchBooksYearOfReleaseBook();
+                    SearchYearOfReleaseBook();
                     break;
             }
         }
@@ -176,9 +146,10 @@ namespace _05_book_storage
             VerifyAvailabilityBooks();
             Console.Clear();
             Console.WriteLine("Список Книг:");
-            for (int i = 0; i < Books.Count; i++)
+
+            for (int i = 0; i < _books.Count; i++)   //for нужен для вывода порядкового номера
             {
-                foreach (Book book in Books)
+                foreach (Book book in _books)
                 {
                     i++;
                     Console.Write($"{i})");
@@ -189,57 +160,73 @@ namespace _05_book_storage
             Console.ReadKey();
         }
 
-        private void DefaultBooks()
+        private void FillDefaultBooks()
         {
-            Books.Add(new Book("Дорога", "Маккарти", 2006));
-            Books.Add(new Book("Поправки", "Франзен", 2001));
-            Books.Add(new Book("Искупление", "Макьюэн", 2001));
-            Books.Add(new Book("Белые зубы", "Смит", 2000));
-            Books.Add(new Book("За чертой", "Маккарти", 1994));
+            _books.Add(new Book("дорога", "маккарти", 2006));
+            _books.Add(new Book("поправки", "франзен", 2001));
+            _books.Add(new Book("искупление", "макьюэн", 2001));
+            _books.Add(new Book("белые Зубы", "смит", 2000));
+            _books.Add(new Book("за чертой", "маккарти", 1994));
         }
 
-        private void SearchBooksByName()        
+        private void SearchByName()        
         {
             Console.Write("Введите название книги:");
-            string userInput = Console.ReadLine();
+            string userInput = Console.ReadLine();            
 
-            foreach (Book books in Books)
+            foreach (Book book in _books)
             {
-                books.SearchName(userInput);
+                if (userInput.ToLower() == book.Name)
+                {
+                    Console.Write("Результат Поиска: ");
+                    book.Show();                  
+                }
             }
+
+            Console.ReadKey();
         }
 
-        private void SearchBooksByAutor()
+        private void SearchByAutor()
         {
             Console.Write("Введите Автора книги:");
             string userInput = Console.ReadLine();
 
-            foreach (Book book in Books)
+            foreach (Book book in _books)
             {
-                book.SearchAuthor(userInput);
+                if (userInput.ToLower() == book.Author)
+                {
+                    Console.Write("Результат Поиска: ");
+                    book.Show();                    
+                }
             }
+
+            Console.ReadKey();
         }
 
-        private void SearchBooksYearOfReleaseBook()
+        private void SearchYearOfReleaseBook()
         {
             Console.Write("Введите Год издания книги:");
             int.TryParse(Console.ReadLine(), out int userInput);
 
-            foreach (Book book in Books)
+            foreach (Book book in _books)
             {
-                book.SearchYearOfRelease(userInput);
-                Console.ReadKey();
+                if (userInput == book.YearOfRelease)
+                {
+                    Console.Write("Результат Поиска: ");
+                    book.Show();                    
+                }
             }
+
+            Console.ReadKey();
         }        
 
         private void VerifyAvailabilityBooks()
         {
-            if (Books.Count > 0) { }
-            else
+            if (_books.Count <= 0) 
             {
                 Console.WriteLine("Книг в хранилище нет.");
                 Console.ReadKey();
-            }
+            }           
         }
     }
 }
